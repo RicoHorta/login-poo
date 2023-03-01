@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/Crud.php'
+require_once dirname(__FILE__) . '/Crud.php';
 
 class Usuario extends Crud{
     protected string $tabela = 'usuarios'; // Define tabela Usuários
@@ -15,6 +15,19 @@ class Usuario extends Crud{
         private string $status="",
         public array $erro=[],
     ){}
+
+    public function set_repeticao($repete_senha){
+        $this->repete_senha = $repete_senha;
+    }
+
+    // Validação dos campos
+    public function validar_cadastro(){
+
+        if (!preg_match("/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ'\s]+$/",$nome)) { $erro_nome = "Somente permitido letras e espaços em branco!"; }
+
+
+
+        }
 }
 
 ?>

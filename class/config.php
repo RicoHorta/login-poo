@@ -7,8 +7,8 @@ define('BANCO', 'login');
 
 // ANTI HTML INJECTION
 function limpaPost ($dados){
-    $dados = = trim($dados);
-    $dados s = stripslashes ($dados);
+    $dados = trim($dados);
+    $dados = stripslashes ($dados);
     $dados = htmlspecialchars ($dados);
     return $dados;
 }

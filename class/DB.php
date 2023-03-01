@@ -1,6 +1,6 @@
 <?php
 // CARREGA CONFIG.PHP
-require_once dirname(__FILE__) . '/config.php'
+require_once dirname(__FILE__) . '/config.php';
 
 // ACESSO AO MYSQL LOGIN VIA PDO
 class DB{
@@ -8,7 +8,7 @@ class DB{
     public static function instanciar(){
         if(!isset(self::$pdo)){
           try{    
-            self::$pdo = new PDO('mysql:host='SERVIDOR'.;dbname='.BANCO,USUARIO,SENHA);
+            self::$pdo = new PDO('mysql:host='.SERVIDOR.';dbname='.BANCO,USUARIO,SENHA);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); //Automatico
             self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJECT);
@@ -22,7 +22,7 @@ class DB{
     }   
 
     public static function prepare($sql){
-        return self::->instanciar()->prepare($sql);
+        return self::instanciar()->prepare($sql);
     }
 
 }

@@ -14,6 +14,11 @@ if (isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) &&
     // Verifica se campos do formulario de login estão vazios
     if(empty($nome) || empty($email) || empty($senha) || empty($repete_senha) || empty($_POST['termos'])){
        $erro_geral = "Todos os campos são obrigatórios!";
+    }else{
+        // Criar um objeto Usuário
+        $usuario = new Usuario($nome,$email,$senha);
+        // Setar a repeticao da senha
+        $usuario->set_repeticao($repete_senha);
     }
 }
 

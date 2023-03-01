@@ -1,12 +1,12 @@
 <?php
 require_once('DB.php');
 
-class Crud extends DB{
+abstract class Crud extends DB{
     protected string $tabela; // DEFINE ATRIBUTO OBRIGATÓRIO PARA FILHOS
 
     abstract public function insert();
-    abstract public function update(abstract $id);
-    abstract public function delete(abstract $id); //automatico
+    abstract public function update($id);
+   // abstract public function delete($id); //automatico
 
     public function find($id){
         $sql = "SELECT * FROM $this->tabela WHERE id=?";
