@@ -19,7 +19,7 @@ abstract class Crud extends DB{
     public function findAll(){
         $sql = "SELECT * FROM $this->tabela";
         $sql = DB::prepare($sql);
-        $sql->execute(array($id));
+        $sql->execute();
         $valor = $sql->fetchAll();
         return $valor;
     }

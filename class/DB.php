@@ -1,6 +1,6 @@
 <?php
 // CARREGA CONFIG.PHP
-require_once dirname(__FILE__) . '/config.php';
+require_once('config.php');
 
 // ACESSO AO MYSQL LOGIN VIA PDO
 class DB{
@@ -10,9 +10,7 @@ class DB{
           try{    
             self::$pdo = new PDO('mysql:host='.SERVIDOR.';dbname='.BANCO,USUARIO,SENHA);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); //Automatico
-            self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJECT);
-            self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //Automatico
+            self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
             }catch(PDOException $erro){
                 echo "Falha na conecção MYSQL: ".$erro->getMessage();
             }

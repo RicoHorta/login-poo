@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . 'class/config.php';
-require_once dirname(__FILE__) . 'autoload.php';
+require_once('class/config.php');
+require_once('autoload.php');
 
 // verificar se usuário digitou e enviou todos os dados
 if (isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['repete_senha'])){
@@ -19,6 +19,17 @@ if (isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) &&
         $usuario = new Usuario($nome,$email,$senha);
         // Setar a repeticao da senha
         $usuario->set_repeticao($repete_senha);
+        // Validar o cadastro do usuário
+        $usuario->validar_cadastro();
+        // Verifica se houve algum erro
+        if(empty($usuario->erro)){
+            //inserir cadastro no banco 
+            if($usuario->insert()){
+                header('location: index.php');
+            }else{
+                $erro_geral = $usuario->erro["erro_geral"];
+            }; 
+        }
     }
 }
 
@@ -48,26 +59,29 @@ if (isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) &&
 
         <div class="input-group">
             <img class="input-icon" src="img/card.png">
-            <input class="erro-input" name="nome" type="text" placeholder="Nome Completo" required>
-            <div class="erro">Por favor informe um nome válido!</div>
+            <input <?php if(isset($usuario->erro["erro_nome"]) || isset($erro_geral)){ echo'class="erro-input"';}?> name="nome" type="text" <?php if(isset($_POST['nome'])){echo 'value"'.$_POST['nome'].'"';}?> placeholder="Nome Completo" required>
+            <div class="erro"><?php if(isset($usuario->erro["erro_nome"])){echo $usuario->erro["erro_nome"];}?></div>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="img/user.png">
-            <input type="email" name="email" placeholder="Seu melhor email" required>
+            <input <?php if(isset($usuario->erro["erro_email"]) || isset($erro_geral)){ echo'class="erro-input"';}?> type="email" name="email" <?php if(isset($_POST['email'])){echo 'value"'.$_POST['email'].'"';}?> placeholder="Seu melhor email" required>
+            <div class="erro"><?php if(isset($usuario->erro["erro_email"])){echo $usuario->erro["erro_email"];}?></div>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="img/lock.png">
-            <input type="password" name="senha" placeholder="Senha mínimo 6 Dígitos" required>
+            <input <?php if(isset($usuario->erro["erro_senha"]) || isset($erro_geral)){ echo'class="erro-input"';}?>type="password" name="senha" <?php if(isset($_POST['senha'])){echo 'value"'.$_POST['senha'].'"';}?> placeholder="Senha mínimo 6 Dígitos" required>
+            <div class="erro"><?php if(isset($usuario->erro["erro_senha"])){echo $usuario->erro["erro_senha"];}?></div>
         </div>
 
         <div class="input-group">
             <img class="input-icon" src="img/lock-open.png">
-            <input type="password" name="repete_senha" placeholder="Repita a senha criada" required>
+            <input <?php if(isset($usuario->erro["erro_repete"]) || isset($erro_geral)){ echo'class="erro-input"';}?>type="password" name="repete_senha" <?php if(isset($_POST['repete_senha'])){echo 'value"'.$_POST['repete_senha'].'"';}?> placeholder="Repita a senha criada" required>
+            <div class="erro"><?php if(isset($usuario->erro["erro_repete"])){echo $usuario->erro["erro_repete"];}?></div>
         </div>
 
-        <div class="input-group">
+        <div <?php if(isset($erro_geral) && $erro_geral=="Todos os campos são obrigatórios!"){ echo'class="erro-input input-group"';}else{echo 'class="input-group"';}?>>
             <input type="checkbox" id="termos" name="termos" value="ok" required>
             <label for="termos">Ao se cadastrar você concorda com a nossa <a class="link" href="#">Política de
                     Privacidade</a> e os <a class="link" href="#">Termos de uso</a></label>
@@ -75,7 +89,7 @@ if (isset($_POST['nome']) && isset($_POST['email']) && isset($_POST['senha']) &&
 
 
         <button class="btn-blue" type="submit">Cadastrar</button>
-        <a href="index.html">Já tenho uma conta</a>
+        <a href="index.php">Já tenho uma conta</a>
     </form>
 </body>
 

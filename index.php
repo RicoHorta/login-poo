@@ -22,7 +22,7 @@
         </div>
        
         <button class="btn-blue" type="submit">Fazer Login</button>
-        <a href="cadastrar.html">Ainda não tenho cadastro</a>
+        <a href="cadastrar.php">Ainda não tenho cadastro</a>
     </form>
 </body>
 </html>
