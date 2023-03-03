@@ -1,5 +1,12 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//Load Composer's autoloader
+require 'lib/vendor/autoload.php';
+
 require_once 'Crud.php';
 
 class Usuario extends Crud{
@@ -59,13 +66,44 @@ class Usuario extends Crud{
             $senha_cripto = sha1($this->senha);
             $sql = "INSERT INTO $this->tabela VALUES (null,?,?,?,?,?,?,?,?)";
             $sql = DB::prepare($sql);
+            //return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro));
+
+            //Create an instance; passing `true` enables exceptions
+            $mail = new PHPMailer(true);
+            try{
+                 //Server settings
+                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;               //Enable verbose debug output
+                $mail->isSMTP();                                     //Send using SMTP
+                $mail->Host       = 'sandbox.smtp.mailtrap.io';         //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                            //Enable SMTP authentication
+                $mail->Username   = '77c3e19b074a2c';    //SMTP username
+                $mail->Password   = 'ebd351081a45f2';                //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  //Enable implicit TLS encryption
+                $mail->Port       = 2525;   
+                
+                //Recipients
+                $mail->setFrom('ricardo@peoplemuriae.com.br', 'Ricardo');
+                $mail->addAddress($this->email, $this->nome);     //Add a recipient
+
+                //Content
+                $mail->isHTML(true);                                  //Set email format to HTML
+                $mail->Subject = 'Falta pouco pra você acessar nosso site';
+                $mail->Body    = "This is the HTML message body <b>in bold!</b> <a 'href=http://localhost/login-poo/confirmar-email.php?chave='>Clique Aqui</a>";
+                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+                $mail->send();
+                
+            }catch (Exception $e) {
+                $this->erro["erro_geral"]="Email de Confirmação não pode ser enviado {$mail->ErrorInfo}";
+                //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
             return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro));
+            }
         }
-    }
     public function update($id){
-        $sql = "UPDATE $this->tabela SET token=? WHERE id =?";
+        $sql = "UPDATE $this->tabela SET token=? WHERE id=?";
         $sql = DB::prepare($sql);
         return $sql->execute(array($token,$id));
     }
-}    
+    }    
 ?>

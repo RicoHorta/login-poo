@@ -1,4 +1,6 @@
 <?php
+// Inicializa a SESSÃO $_SESSION['TOKEN'] do arquivo Login.php
+session_start();
 // CONFIGURAÇÕES DO BANCO MYSQL LOGIN
 define('SERVIDOR', 'localhost');
 define('USUARIO', 'root');
