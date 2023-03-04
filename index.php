@@ -1,6 +1,8 @@
 <?php
+
 require_once('class/config.php');
 require_once('autoload.php');
+
 
 // verificar se usuário digitou e enviou todos os dados
 if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) && !empty($_POST['senha'])){
@@ -13,6 +15,7 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
 // Chama o método auth da Classe Login
     $login->auth($email, $senha);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,7 +36,14 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
                 <?php echo $login->erro["erro_geral"];?>
                 </div>
         <?php }?>
-
+              
+        <!-- recebe msg do arquivo Confirmar-email caso o código de confirmação falhe -->
+        <?php 
+        if (isset($_SESSION['msg'])){
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+        }?>
+        
         <div class="input-group">
             <img class="input-icon" src="img/user.png">
             <input type="email" name="email" placeholder="Digite seu email" required>
@@ -45,7 +55,7 @@ if (isset($_POST['email']) && isset($_POST['senha']) && !empty($_POST['email']) 
         </div>
        
         <button class="btn-blue" type="submit">Fazer Login</button>
-        <a href="cadastrar.php">Ainda não tenho cadastro</a>
+        <a href="cadastrar.php">Quero me cadastrar agora</a>
     </form>
 </body>
 </html>

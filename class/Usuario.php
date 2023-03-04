@@ -63,8 +63,10 @@ class Usuario extends Crud{
             $this->erro["erro_geral"]="Usuário já cadastrado!";
         }else{
             $data_cadastro = date('d/m/Y');
+            $sits_usuario_id = 3;
+            $chave = password_hash($this->email . date("Y-m-d H:i:s"), PASSWORD_DEFAULT);
             $senha_cripto = sha1($this->senha);
-            $sql = "INSERT INTO $this->tabela VALUES (null,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO $this->tabela VALUES (null,?,?,?,?,?,?,?,?,?,?)";
             $sql = DB::prepare($sql);
             //return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro));
 
@@ -72,24 +74,24 @@ class Usuario extends Crud{
             $mail = new PHPMailer(true);
             try{
                  //Server settings
-                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;               //Enable verbose debug output
+                $mail->CharSet = "UTF-8";                            //Caracteres especiais do português
                 $mail->isSMTP();                                     //Send using SMTP
-                $mail->Host       = 'sandbox.smtp.mailtrap.io';         //Set the SMTP server to send through
+                $mail->Host       = 'smtp.hostinger.com.br';         //Set the SMTP server to send through
                 $mail->SMTPAuth   = true;                            //Enable SMTP authentication
-                $mail->Username   = '77c3e19b074a2c';    //SMTP username
-                $mail->Password   = 'ebd351081a45f2';                //SMTP password
+                $mail->Username   = 'cobranca@cdlacemais.com.br';    //SMTP username
+                $mail->Password   = '#CDLacemais79#';                //SMTP password
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  //Enable implicit TLS encryption
-                $mail->Port       = 2525;   
+                $mail->Port       = 587;   
                 
                 //Recipients
-                $mail->setFrom('ricardo@peoplemuriae.com.br', 'Ricardo');
+                $mail->setFrom('cobranca@cdlacemais.com.br', 'Rico da RicoCred');
                 $mail->addAddress($this->email, $this->nome);     //Add a recipient
 
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
-                $mail->Subject = 'Falta pouco pra você acessar nosso site';
-                $mail->Body    = "This is the HTML message body <b>in bold!</b> <a 'href=http://localhost/login-poo/confirmar-email.php?chave='>Clique Aqui</a>";
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $mail->Subject = 'Falta pouco pra se juntar a RicoCred';
+                $mail->Body    = "Prezado(a) " . $this->nome . ".<br><br>Agradecemos a sua solicita&ccedil;&atilde;o de cadastramento em nosso site!<br><br>Para que possamos liberar o seu cadastro em nosso sistema, solicitamos a confirma&ccedil;&atilde;o do e-mail clicanco no link abaixo: <br><br> <a href='http://localhost/login-poo/confirmar-email.php?chave=$chave'>Clique aqui</a><br><br>Esta mensagem foi enviada a pela RicoCred.<br>Nenhum e-mail enviado pela RicoCred tem arquivos anexados ou solicita o preenchimento de senhas e informações cadastrais.<br><br>" ;
+                $mail->AltBody = 'Por favor, reserve um tempo para verificar seu e-mail agora. \n\nEsteja atento as suas notifica&ccedil;&otilde;es importantes e evite problemas ao fazer seu login. \n\n';
 
                 $mail->send();
                 
@@ -97,7 +99,7 @@ class Usuario extends Crud{
                 $this->erro["erro_geral"]="Email de Confirmação não pode ser enviado {$mail->ErrorInfo}";
                 //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
-            return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro));
+            return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro,$chave,$sits_usuario_id));
             }
         }
     public function update($id){
