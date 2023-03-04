@@ -20,6 +20,7 @@ class Usuario extends Crud{
         private string $recupera_senha="",
         private string $token="",
         private string $codigo_confirmacao="",
+        private string $sits_usuario_id="",
         private string $status="",
         public array $erro=[],
     ){}

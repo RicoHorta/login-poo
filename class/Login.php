@@ -7,16 +7,13 @@ class Login{
     private string $senha;
     private string $token;
     public string $nome;
+    private string $sits_usuario_id;
     public array $erro=[];
 
     public function auth($email, $senha){
-
         //Criptografa a senha
-
         $senha_cripto = sha1($senha);
-
         // Verificar se tem usuário cadastrado
-
         $sql = "SELECT * FROM usuarios WHERE email=? AND senha=? LIMIT 1";
         $sql = DB::prepare($sql);
         $sql->execute(array($email, $senha_cripto));
@@ -33,10 +30,15 @@ class Login{
             if ($sql->execute(array($this->token, $email, $senha_cripto))){
                 //Colocar o TOKEN na SESSÃO
                 $_SESSION['TOKEN'] = $this->token;
+                // Verifica a situação do usuário (ativo=1)
+                if($usuario["sits_usuario_id"] == '1'){
                 //Redirecionamos usuario para área restrita
                 header('location: restrita/index.php');
+                }else{
+                    $this->erro["erro_geral"]="Cheque seu e-mail.Falta confirmação de cadastro!";   
+                }
             }else{
-                $this->erro["erro_escolar"]="Falha de comunicação com o servidor!";
+                $this->erro["erro_geral"]="Erro de comunicação com o Servidor!";
             }
         }
     }
