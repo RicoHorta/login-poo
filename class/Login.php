@@ -7,7 +7,7 @@ class Login{
     private string $senha;
     private string $token;
     public string $nome;
-    private string $sits_usuario_id;
+    private string $status;
     public array $erro=[];
 
     public function auth($email, $senha){
@@ -31,7 +31,7 @@ class Login{
                 //Colocar o TOKEN na SESSÃO
                 $_SESSION['TOKEN'] = $this->token;
                 // Verifica a situação do usuário (ativo=1)
-                if($usuario["sits_usuario_id"] == '1'){
+                if($usuario["status"] == '1'){
                 //Redirecionamos usuario para área restrita
                 header('location: restrita/index.php');
                 }else{

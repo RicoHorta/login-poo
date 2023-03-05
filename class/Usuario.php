@@ -20,8 +20,7 @@ class Usuario extends Crud{
         private string $recupera_senha="",
         private string $token="",
         private string $codigo_confirmacao="",
-        private string $sits_usuario_id="",
-        private string $status="",
+        private string $status='3',
         public array $erro=[],
     ){}
 
@@ -64,13 +63,13 @@ class Usuario extends Crud{
             $this->erro["erro_geral"]="Usuário já cadastrado!";
         }else{
             $data_cadastro = date('d/m/Y');
-            $sits_usuario_id = 3;
+            $status = 3;
             $chave = password_hash($this->email . date("Y-m-d H:i:s"), PASSWORD_DEFAULT);
             $senha_cripto = sha1($this->senha);
-            $sql = "INSERT INTO $this->tabela VALUES (null,?,?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO $this->tabela VALUES (null,?,?,?,?,?,?,?,?,?)";
             $sql = DB::prepare($sql);
-            //return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro));
-
+            
+           
             //Create an instance; passing `true` enables exceptions
             $mail = new PHPMailer(true);
             try{
@@ -100,7 +99,7 @@ class Usuario extends Crud{
                 $this->erro["erro_geral"]="Email de Confirmação não pode ser enviado {$mail->ErrorInfo}";
                 //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
-            return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$this->status,$data_cadastro,$chave,$sits_usuario_id));
+            return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$status,$data_cadastro,$chave));
             }
         }
     public function update($id){

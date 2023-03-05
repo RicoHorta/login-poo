@@ -6,7 +6,7 @@
 require_once('class/config.php');
 require_once('autoload.php');
 
-$sits_usuario_id='1';
+$status='1';
 
 $chave = filter_input(INPUT_GET, "chave", FILTER_SANITIZE_STRING);
 
@@ -19,9 +19,9 @@ if(!empty($chave)){
     //Adicionar o novo usuário caso ele ainda não exista no Banco
     if ($usuario) {
         //Altera a situação do usuário para 1(ativo)
-        $sql = "UPDATE usuarios SET sits_usuario_id=1 WHERE id='{$id}'";
+        $sql = "UPDATE usuarios SET status=1 WHERE chave=?";
         $sql = DB::prepare($sql); 
-            if ($sql->execute()){
+            if ($sql->execute(array($chave))){
                 $_SESSION["msg"] = "<div class='sucesso animate__animated animate__rubberBand'>Cadastro Realizado com Sucesso</div>";
                 header("Location: index.php");
             }else{
