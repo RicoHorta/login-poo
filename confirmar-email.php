@@ -22,7 +22,7 @@ if(!empty($chave)){
         $sql = "UPDATE usuarios SET status=1 WHERE chave=?";
         $sql = DB::prepare($sql); 
             if ($sql->execute(array($chave))){
-                $_SESSION["msg"] = "<div class='sucesso animate__animated animate__rubberBand'>Cadastro Realizado com Sucesso</div>";
+                $_SESSION["msg"] = "<div class='sucesso animate__animated animate__rubberBand'>Confirmação de Email Realizada com Sucesso</div>";
                 header("Location: index.php");
             }else{
                 $_SESSION["msg"] = "<div class='erro-geral animate__animated animate__rubberBand'>Confira seu email e valide seu Cadastro</div>";
