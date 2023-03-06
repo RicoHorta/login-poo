@@ -13,7 +13,14 @@ class Recupsenha extends Crud{
     protected string $tabela = 'usuarios'; // Define tabela Usuários
 
     //Constroi a Classe com os atributos email e erro
-    function __construct(private string $email,private string $nome="",public array $erro=[]){}
+    function __construct(
+        private string $email="",
+        private string $id="",
+        private string $recupera_senha="",
+        private string $codigo_confirmacao="",
+        private string $nome="",
+        public array $erro=[],
+        ){}
 
     // Validação do email
     public function valida_email(){
@@ -56,7 +63,7 @@ class Recupsenha extends Crud{
                 //Content
                 $mail->isHTML(true);                                  //Set email format to HTML
                 $mail->Subject = 'Recupere seu acesso - RicoCred';
-                $mail->Body    = "Prezado(a) " . $this->nome . ".<br><br>Atendendo a sua solicita&ccedil;&atilde;o de recuperação da senha em nosso site, solicitamos que clique no link abaixo e volte a ser feliz.<br><br><a href='http://localhost/login-poo/atualizar_senha.php=?chave=$recupera_senha'>Clique aqui e Volte a ser Feliz</a><br><br>Esta mensagem foi enviada a pela RicoCred.<br>Nenhum e-mail enviado pela RicoCred tem arquivos anexados ou solicita o preenchimento de senhas e informações cadastrais.<br><br>" ;
+                $mail->Body    = "Prezado(a) " . $this->nome . ".<br><br>Atendendo a sua solicita&ccedil;&atilde;o de recuperação da senha em nosso site, solicitamos que clique no link abaixo e volte a ser feliz.<br><br><a href='http://localhost/login-poo/atualizar_senha.php?chave=$recupera_senha'>Clique aqui e Volte a ser Feliz</a><br><br>Esta mensagem foi enviada a pela RicoCred.<br>Nenhum e-mail enviado pela RicoCred tem arquivos anexados ou solicita o preenchimento de senhas e informações cadastrais.<br><br>" ;
                 $mail->AltBody = 'Por favor, reserve um tempo para verificar seu e-mail agora. \n\nEsteja atento as suas notifica&ccedil;&otilde;es importantes e evite problemas ao fazer seu login. \n\n';
 
                 $mail->send();
@@ -72,8 +79,25 @@ class Recupsenha extends Crud{
         }
     }
     public function update($id){
-        $sql = "UPDATE $this->tabela SET recupera_senha=? WHERE id=?";
+        $senha_cripto = sha1($this->senha);
+        $sql = "UPDATE $this->tabela SET senha=? WHERE id=?";
         $sql = DB::prepare($sql);
         return $sql->execute(array($recupera_senha,$id));
+    }
+
+    public function validachave($codigo_confirmacao,$senha){
+            $sql = "SELECT id FROM $this->tabela WHERE recupera_senha=? LIMIT 1";
+            $sql = DB::prepare($sql);
+            $sql->execute(array($codigo_confirmacao));
+            $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+            $this->id = $usuario["id"];
+            if ($usuario) {
+                $senha_cripto = sha1($senha);
+                $sql = "UPDATE $this->tabela SET senha=? WHERE id=?";
+                $sql = DB::prepare($sql);
+                return $sql->execute(array($senha_cripto,$this->id));
+            }else{
+                $this->erro["erro_geral"]="Erro: Solicite novo código!";
+            }
     }
 }

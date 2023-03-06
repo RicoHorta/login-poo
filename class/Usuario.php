@@ -54,7 +54,7 @@ class Usuario extends Crud{
     
     public function insert(){
         //Verificar se email já consta no Banco de Dados
-        $sql = "SELECT * FROM usuarios WHERE email=? LIMIT 1";
+        $sql = "SELECT * FROM $this->tabela WHERE email=? LIMIT 1";
         $sql = DB::prepare($sql);
         $sql->execute(array($this->email));
         $usuario = $sql->fetch();
@@ -96,7 +96,7 @@ class Usuario extends Crud{
                 $mail->send();
                 
             }catch (Exception $e) {
-                $this->erro["erro_geral"]="Email de Confirmação não pode ser enviado {$mail->ErrorInfo}";
+                $this->erro["erro_geral"]=$e->getMessage();
                 //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
             return $sql->execute(array($this->nome,$this->email,$senha_cripto,$this->recupera_senha,$this->token,$this->codigo_confirmacao,$status,$data_cadastro,$chave));
