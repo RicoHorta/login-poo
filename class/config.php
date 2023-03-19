@@ -4,7 +4,7 @@ session_start();
 // CONFIGURAÇÕES DO BANCO MYSQL LOGIN
 define('SERVIDOR', 'localhost');
 define('USUARIO', 'root');
-define('SENHA','614424Beta');
+define('SENHA','');
 define('BANCO', 'login');
 
 // ANTI HTML INJECTION
